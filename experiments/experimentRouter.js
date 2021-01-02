@@ -23,4 +23,15 @@ router.put("/:id", async (req,res) => {
     }
 })
 
+router.get("/:orgId", async (req, res) => {
+    const orgId = req.params.orgId
+    try {
+        const experiments = await Experiments.getByOrgId(orgId)
+        res.status(200).json({experiments: experiments})
+    } catch(err) {
+        console.log(err)
+        res.status(500).json({message: "Get Failed"})
+    }
+})
+
 module.exports = router;

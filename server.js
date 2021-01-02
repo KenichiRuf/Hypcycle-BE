@@ -20,7 +20,7 @@ server.use("/api/users", userRouter);
 server.use("/api/goals", goalRouter);
 server.use("/api/orgs", orgRouter);
 server.use("/api/ideas", ideaRouter);
-server.use("api/experiments", experimentRouter);
+server.use("/api/experiments", experimentRouter);
 
 server.get("/", (req, res) => {
   res.send("<h1>Backend API for Hypcycle</h1>");

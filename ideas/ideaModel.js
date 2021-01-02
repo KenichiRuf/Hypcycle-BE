@@ -46,6 +46,7 @@ const addIdea = async idea => {
     if(tail) {
         await updateIdea({next: newIdea}, tail.id)
     }
+    return await db("ideas").where({id: newIdea}).first()
 };
 
 module.exports = {

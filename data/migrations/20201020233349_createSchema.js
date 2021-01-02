@@ -41,7 +41,7 @@ exports.up = function(knex) {
       tbl.string("description");
       tbl.integer("next").unsigned().references("id").inTable("ideas");
       tbl.integer("previous").unsigned().references("id").inTable("ideas");
-      tbl.boolean("converted")
+      tbl.boolean("converted").defaultTo(false)
     })
     .createTable("experiments", tbl => {
       tbl.increments("id");
