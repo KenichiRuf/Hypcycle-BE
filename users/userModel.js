@@ -22,10 +22,15 @@ const getOrgUsers = async () => {
   return await db("org_users")
 }
 
+const getOrgUsersByOrgId = async org_id => {
+  return await db("org_users").where({org_id})
+}
+
 module.exports = {
   addUser,
   findBy,
   addOrgUser,
   getOrgUser,
-  getOrgUsers
+  getOrgUsers,
+  getOrgUsersByOrgId
 };

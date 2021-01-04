@@ -8,6 +8,9 @@ const goalRouter = require("./goals/goalRouter");
 const orgRouter = require("./orgs/orgRouter");
 const ideaRouter = require("./ideas/ideaRouter");
 const experimentRouter = require("./experiments/experimentRouter");
+const playbookRouter = require("./playbooks/playbookRouter");
+const playRouter = require("./plays/playRouter");
+const dashboardRouter = require("./dashboard/dashboardRouter");
 
 const server = express();
 
@@ -21,6 +24,9 @@ server.use("/api/goals", goalRouter);
 server.use("/api/orgs", orgRouter);
 server.use("/api/ideas", ideaRouter);
 server.use("/api/experiments", experimentRouter);
+server.use("/api/playbooks", playbookRouter);
+server.use("/api/plays", playRouter);
+server.use("/api/dashboard", dashboardRouter);
 
 server.get("/", (req, res) => {
   res.send("<h1>Backend API for Hypcycle</h1>");

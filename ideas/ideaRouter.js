@@ -15,10 +15,12 @@ router.post("/", async (req, res) => {
 router.put("/edit/:ideaId", async (req,res) => {
     const ideaId = req.params.ideaId
     const changes = req.body
+    console.log(changes)
     try {
-        await Ideas.updateidea(changes, ideaId);
+        await Ideas.updateIdea(changes, ideaId);
         res.status(200).json({message: "Update Successful"})
     } catch(err) {
+        console.log(err)
         res.status(500).json({message: "Update Failed", error: err})
     }
 })
@@ -32,6 +34,16 @@ router.get("/:orgId", async (req,res) => {
         res.status(500).json({message: "Get Failed", error: err})
     }
 })
+
+// router.get("/:orgId", async (req,res) => {
+//     const orgId = req.params.orgId
+//     try {
+//         const ideas = await Ideas.getIdeas(orgId);
+//         res.status(200).json({ideas: [...ideas]})
+//     } catch(err) {
+//         res.status(500).json({message: "Get Failed", error: err})
+//     }
+// })
 
 router.put("/move", async (req,res) => {
     const idea = req.body.idea

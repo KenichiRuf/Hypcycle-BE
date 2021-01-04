@@ -1,5 +1,9 @@
 const db = require("../data/dbConfig.js");
 
+const getIdeas = async org_id => {
+    return db("ideas").where({org_id})
+}
+
 const updateIdea = async (changes, id) => {
     return await db("ideas").where({id}).update(changes)
 }
@@ -45,6 +49,7 @@ const addIdea = async idea => {
     const [newIdea] = await db("ideas").insert(idea);
     if(tail) {
         await updateIdea({next: newIdea}, tail.id)
+        await updateIdea({previous: tail.id}, newIdea)
     }
     return await db("ideas").where({id: newIdea}).first()
 };
@@ -54,5 +59,6 @@ module.exports = {
     updateIdea,
     getIdeasByOrgId,
     removeNode,
-    insertNode
+    insertNode,
+    getIdeas
 };

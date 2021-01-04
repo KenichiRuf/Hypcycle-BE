@@ -64,6 +64,7 @@ exports.up = function(knex) {
     .createTable("plays", tbl => {
       tbl.increments("id");
       tbl.string("name");
+      tbl.string("description");
       tbl.integer("playbook_id").unsigned().references("id").inTable("playbooks");
       tbl.integer("created_by").unsigned().references("id").inTable("org_users")
     })
