@@ -41,7 +41,7 @@ exports.up = function(knex) {
       tbl.string("description");
       tbl.integer("next").unsigned().references("id").inTable("ideas");
       tbl.integer("previous").unsigned().references("id").inTable("ideas");
-      tbl.boolean("converted").defaultTo(false)
+      tbl.boolean("converted").defaultTo(false);
     })
     .createTable("experiments", tbl => {
       tbl.increments("id");
@@ -53,32 +53,48 @@ exports.up = function(knex) {
       tbl.date("start_date");
       tbl.integer("trials");
       tbl.integer("successes");
-      tbl.float("target_success_rate")
+      tbl.float("target_success_rate");
     })
     .createTable("playbooks", tbl => {
       tbl.increments("id");
       tbl.string("name");
       tbl.integer("org_id").unsigned().references("id").inTable("orgs");
-      tbl.integer("owner_id").unsigned().references("id").inTable("org_users")
+      tbl.integer("owner_id").unsigned().references("id").inTable("org_users");
     })
     .createTable("plays", tbl => {
       tbl.increments("id");
       tbl.string("name");
       tbl.string("description");
       tbl.integer("playbook_id").unsigned().references("id").inTable("playbooks");
-      tbl.integer("created_by").unsigned().references("id").inTable("org_users")
+      tbl.integer("created_by").unsigned().references("id").inTable("org_users");
     })
     .createTable("steps", tbl => {
       tbl.increments("id");
-      tbl.integer("play_id").unsigned().references("id").inTable("plays")
-      tbl.integer("order").unsigned()
-      tbl.string("description")
+      tbl.integer("play_id").unsigned().references("id").inTable("plays");
+      tbl.integer("order").unsigned();
+      tbl.string("description");
     })
-
+    .createTable("tags", tbl => {
+      tbl.increments("id");
+      tbl.string("name");
+    })
+    .createTable("goal_tags", tbl => {
+      tbl.increments("id");
+      tbl.integer("goal_id").unsigned().references("id").inTable("goals");
+      tbl.integer("tag_id").unsigned().references("id").inTable("tags");
+    })
+    .createTable("idea_tags", tbl => {
+      tbl.increments("id");
+      tbl.integer("idea_id").unsigned().references("id").inTable("ideas");
+      tbl.integer("tag_id").unsigned().references("id").inTable("tags");
+    })
 };
 
 exports.down = function(knex) {
     return knex.schema
+    .dropTableIfExists("idea_tags")
+    .dropTableIfExists("goal_tags")
+    .dropTableIfExists("tags")
     .dropTableIfExists("steps")
     .dropTableIfExists("plays")
     .dropTableIfExists("playbooks")
