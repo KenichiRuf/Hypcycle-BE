@@ -33,4 +33,13 @@ router.get("/:orgId", async (req,res) => {
     }
 })
 
+router.get("/", async (req,res) => {
+    try {
+        const goals = await Goals.getGoalsByOrgId(0)
+        res.status(200).json({goals: [...goals]})
+    } catch(err) {
+        res.status(500).json({message: "Get Failed", error: err})
+    }
+})
+
 module.exports = router;
