@@ -1,6 +1,7 @@
 const router = require("express").Router();
 
 const Goals = require("./goalModel");
+const Tags = require("../tags/tagModel");
 
 router.post("/", async (req, res) => {
     const goal = req.body;
@@ -35,11 +36,26 @@ router.get("/:orgId", async (req,res) => {
 
 router.get("/", async (req,res) => {
     try {
-        const goals = await Goals.getGoalsByOrgId(0)
-        res.status(200).json({goals: [...goals]})
+        const goals = await Goals.getGoalsByOrgId(1)
+        const goalTags = await Goals.getGoalTagsByOrgId(1)
+        const tags = await Tags.getTags()
+        res.status(200).json({
+            goals: [...goals],
+            goalTags: [...goalTags],
+            tags: [...tags]
+        })
     } catch(err) {
         res.status(500).json({message: "Get Failed", error: err})
     }
 })
+
+// router.get("/tags", async (req, res) => {
+//     try {
+//         const goalTags = await Goals.getGoalTags()
+//         res.status(200).json({goalTags: goalTags})
+//     } catch(err) {
+//         res.status(500).json({message: "Get Failed", error: err})
+//     }
+// })
 
 module.exports = router;
