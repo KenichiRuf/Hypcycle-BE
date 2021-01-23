@@ -12,8 +12,23 @@ const getGoalsByOrgId = async org_id => {
     return await db("goals").where({org_id})
 }
 
+const getGoalTagsByOrgId = async org_id => {
+    return await db("goal_tags")
+    .join("tags", "tags.id", "goal_tags.tag_id")
+    .select("tags.name as tag_name", "goal_tags.goal_id")
+    .join("goals", function(){
+        this.on("goal_tags.goal_id", "=", "goals.id").onIn("goals.org_id", org_id)
+    })
+}
+
+const getGoalTags = async () => {
+    return await db("goal_tags")
+}
+
 module.exports = {
     addGoal,
     updateGoal,
-    getGoalsByOrgId
+    getGoalsByOrgId,
+    getGoalTagsByOrgId,
+    getGoalTags
 };
