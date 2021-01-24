@@ -11,7 +11,9 @@ const findBy = async filter => {
 };
 
 const addOrgUser = async orgUser => {
-  return await db("org_users").insert(orgUser);
+  await db("org_users").insert(orgUser)
+  const user_id = orgUser.user_id
+  return await db("org_users").where({user_id}).join("users", "org_users.user_id", "users.id")
 }
 
 const getOrgUser = async user_id => {
@@ -23,7 +25,7 @@ const getOrgUsers = async () => {
 }
 
 const getOrgUsersByOrgId = async org_id => {
-  return await db("org_users").where({org_id})
+  return await db("org_users").where({org_id}).join("users", "org_users.user_id", "users.id")
 }
 
 module.exports = {
