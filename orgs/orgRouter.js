@@ -1,11 +1,17 @@
 const router = require("express").Router();
 
 const Orgs = require("./orgModel");
+const Users = require("../users/userModel")
 
-router.post("/org", async (req, res) => {
+router.post("/:userId", async (req, res) => {
     const org = req.body;
+    const userId = req.params.userId
     try {
-      await Orgs.addOrg(org);
+      const newOrg = await Orgs.addOrg(org);
+      const newOrgUser = await Users.addOrgUser({
+        user_id: userId,
+        org_id: newOrg[0]
+      })
       res.status(201).json({message: "New Org Created", org: org})
     } catch(err) {
       res.status(500).json({message: "Could Not Create New Org", error: err})
