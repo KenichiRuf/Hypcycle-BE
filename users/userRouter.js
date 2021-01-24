@@ -1,23 +1,38 @@
 const router = require("express").Router();
+const bcrypt = require("bcryptjs");
 
 const Users = require("./userModel");
+const {verifyUniqueEmail} = require("../middlewares");
 
-router.post("/", async (req, res) => {
-    const user = req.body;
-    try {
-      await Users.addUser(user);
-      res.status(201).json({message: "New User Created", user: user})
-    } catch(err) {
-      res.status(500).json({message: "Could Not Create New User", error: err})
-    }
-  })
+
+router.post("/:org_id", verifyUniqueEmail, async (req, res) => {
+  const user = {
+    email: req.body.email,
+    password: bcrypt.hashSync(Math.random().toString(), 10)
+  };
+
+  try {
+    const newUser = await Users.addUser(user);
+    console.log(newUser)
+    const newOrgUser = await Users.addOrgUser({
+      user_id: newUser[0],
+      org_id: req.params.org_id
+    });
+    console.log(newOrgUser)
+    res.status(201).json({ message: "Added New User", orgUser: newOrgUser});
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ message: "Could Not Add New User", error: error });
+  }
+});
 
 router.post("/orgUser", async (req, res) => {
     const orgUser = req.body;
     try {
-        await Users.addOrgUser(orgUser);
-        res.status(201).json({message: "New OrgUser Created", orgUser: orgUser})
+        let newOrgUser = await Users.addOrgUser(orgUser);
+        res.status(201).json({message: "New OrgUser Created", orgUser: newOrgUser})
     } catch(err) {
+      console.log(err)
         res.status(500).json({message: "Could Not Create OrgUser", error: err})
     }
 })
