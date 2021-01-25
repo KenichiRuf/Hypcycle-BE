@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 
 const Users = require("./userModel");
 const {verifyUniqueEmail} = require("../middlewares");
-
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 router.post("/:org_id", verifyUniqueEmail, async (req, res) => {
   const user = {
@@ -11,14 +12,22 @@ router.post("/:org_id", verifyUniqueEmail, async (req, res) => {
     password: bcrypt.hashSync(Math.random().toString(), 10)
   };
 
+  const msg = {
+    to: req.body.email,
+    from: 'ken@hypcycle.com',
+    subject: "You've been invited to join Hypcycle",
+    html: `Login to your account at <a href=${"https://app.hypcycle.com/reset-password"}>https://app.hypcycle.com/reset-password</a>. Please reset your password when you first login.`
+  }
+
   try {
     const newUser = await Users.addUser(user);
-    console.log(newUser)
     const newOrgUser = await Users.addOrgUser({
       user_id: newUser[0],
       org_id: req.params.org_id
     });
-    console.log(newOrgUser)
+    sgMail.send(msg)
+      .then(() => console.log("email sent"))
+      .catch((error) => console.error(error))
     res.status(201).json({ message: "Added New User", orgUser: newOrgUser});
   } catch (error) {
     console.log(error)
@@ -32,7 +41,6 @@ router.post("/orgUser", async (req, res) => {
         let newOrgUser = await Users.addOrgUser(orgUser);
         res.status(201).json({message: "New OrgUser Created", orgUser: newOrgUser})
     } catch(err) {
-      console.log(err)
         res.status(500).json({message: "Could Not Create OrgUser", error: err})
     }
 })
