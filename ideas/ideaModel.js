@@ -11,11 +11,15 @@ const updateIdea = async (changes, id) => {
 const getIdeasByOrgId = async org_id => {
     let node = await db("ideas").where({org_id: org_id, previous: null}).first()
     let ideas = [node]
-    while (node.next) {
-        node = await db("ideas").where({id: node.next}).first()
-        ideas = [...ideas, node]
+    if(node) {
+        while (node.next) {
+            node = await db("ideas").where({id: node.next}).first()
+            ideas = [...ideas, node]
+        }
+        return ideas
+    } else {
+        return []
     }
-    return ideas
 }
 
 const removeNode = async idea => {
@@ -54,11 +58,21 @@ const addIdea = async idea => {
     return await db("ideas").where({id: newIdea}).first()
 };
 
+const getIdeaTagsByOrgId = async org_id => {
+    return await db("idea_tags")
+    .join("tags", "tags.id", "idea_tags.tag_id")
+    .select("tags.name as tag_name", "idea_tags.idea_id")
+    .join("ideas", function(){
+        this.on("idea_tags.idea_id", "=", "ideas.id").onIn("ideas.org_id", org_id)
+    })
+}
+
 module.exports = {
     addIdea,
     updateIdea,
     getIdeasByOrgId,
     removeNode,
     insertNode,
-    getIdeas
+    getIdeas,
+    getIdeaTagsByOrgId
 };
