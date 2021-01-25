@@ -85,4 +85,26 @@ router.get("/orgUsers/:id", async(req,res) => {
     }
 })
 
+router.put("/:user_id", async (req,res) => {
+    const user_id = req.params.user_id
+    const changes = req.body
+    try {
+        await Users.updateUser(user_id, changes)
+        res.status(201).json({message: "Update Successful"})
+    } catch(err) {
+      res.status(500).json({message: "Update Failed"})
+    }
+})
+
+router.put("/password/:user_id", async (req,res) => {
+  const user_id = req.params.user_id
+  const password = bcrypt.hashSync(req.body.password, 10)
+  try {
+    await Users.updateUser(user_id, password)
+    res.status(201).json({message: "Password Update Successful"})
+  } catch(err) {
+    res.status(500).json({message: "Password Update Failed"})
+  }
+})
+
 module.exports = router;
