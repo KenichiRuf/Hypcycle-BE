@@ -32,6 +32,10 @@ const updateUser = async (id, changes) => {
   return await db("users").where({id}).update(changes)
 }
 
+const getUsers = async () => {
+  return await db("users")
+}
+
 module.exports = {
   addUser,
   findBy,
@@ -39,5 +43,6 @@ module.exports = {
   getOrgUser,
   getOrgUsers,
   getOrgUsersByOrgId,
-  updateUser
+  updateUser,
+  getUsers
 };
