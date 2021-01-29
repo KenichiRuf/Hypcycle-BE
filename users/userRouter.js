@@ -2,11 +2,11 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 
 const Users = require("./userModel");
-const {verifyUniqueEmail} = require("../middlewares");
+const {verifyUniqueEmailOrgUser} = require("../middlewares");
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-router.post("/:org_id", verifyUniqueEmail, async (req, res) => {
+router.post("/:org_id", verifyUniqueEmailOrgUser(req.params.org_id), async (req, res) => {
   const tempPassword = "hamburger"
   const user = {
     email: req.body.email,
