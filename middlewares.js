@@ -6,7 +6,8 @@ module.exports = {
     validateUserId,
     authorizeUser,
     verifyUniqueEmail,
-    verifyUniqueOrgName
+    verifyUniqueOrgName,
+    verifyUniqueEmailOrgUser
 }
 
 async function verifyUniqueEmail(req, res, next) {
@@ -20,6 +21,21 @@ async function verifyUniqueEmail(req, res, next) {
         }
     } catch(error) {
         res.status(500).json({message: "verifyUniqueEmail Error", error: error})
+    }
+}
+
+async function verifyUniqueEmailOrgUser(org_id, req, res, next) {
+    const email = req.body.email
+    try {
+        const orgUsers = await Users.getOrgUsersByOrgId({org_id})
+        const [user] = orgUsers.filter(orgUser => orgUser.email === email)
+        if(user) {
+            res.status(400).json({message: "Email Already In Use"})
+        } else {
+            next();
+        }
+    } catch(error) {
+        res.status(500).json({message: "verifyUniqueEmailOrgUser Error", error: error})
     }
 }
 

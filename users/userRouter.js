@@ -2,22 +2,16 @@ const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 
 const Users = require("./userModel");
-const {verifyUniqueEmail} = require("../middlewares");
+const {verifyUniqueEmailOrgUser} = require("../middlewares");
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-router.post("/:org_id", verifyUniqueEmail, async (req, res) => {
+router.post("/:org_id", verifyUniqueEmailOrgUser(req.params.org_id), async (req, res) => {
+  const tempPassword = "hamburger"
   const user = {
     email: req.body.email,
-    password: bcrypt.hashSync(Math.random().toString(), 10)
+    password: bcrypt.hashSync(tempPassword, 10)
   };
-
-  const msg = {
-    to: req.body.email,
-    from: 'ken@hypcycle.com',
-    subject: "You've been invited to join Hypcycle",
-    html: `Login to your account at <a href=${"https://app.hypcycle.com/reset-password"}>https://app.hypcycle.com/reset-password</a>. Please reset your password when you first login.`
-  }
 
   try {
     const newUser = await Users.addUser(user);
@@ -25,6 +19,12 @@ router.post("/:org_id", verifyUniqueEmail, async (req, res) => {
       user_id: newUser[0],
       org_id: req.params.org_id
     });
+    const msg = {
+      to: req.body.email,
+      from: 'ken@hypcycle.com',
+      subject: "You've been invited to join Hypcycle",
+      html: `Login to your account at <a href="http://localhost:3000/reset-password/${req.body.email}/${newUser[0]}/${tempPassword}">https://app.hypcycle.com/reset-password</a>. Please reset your password when you first login.`
+    }
     sgMail.send(msg)
       .then(() => console.log("email sent"))
       .catch((error) => console.error(error))
@@ -57,16 +57,16 @@ router.get("/:userId", async (req, res) => {
 
 router.get("/orgUser/:userId", async (req,res) => {
     const userId = req.params.userId
+    console.log(userId)
     try {
       const orgUsers = await Users.getOrgUser(userId);
       res.status(200).json({orgUsers: orgUsers})
     } catch(err) {
-      console.log(err)
       res.status(500).json({message: "Get OrgUser Failed", error: err})
     }
 })
 
-router.get("/orgUser", async(req,res) => {
+router.get("/orgUser", async (req,res) => {
     try {
       const orgUsers = await Users.getOrgUsers();
       res.status(200).json({orgUsers: orgUsers})
@@ -83,6 +83,37 @@ router.get("/orgUsers/:id", async(req,res) => {
     } catch(err) {
         res.status(500).json({message: "Get Failed", error: err})
     }
+})
+
+router.put("/:user_id", async (req,res) => {
+    const user_id = req.params.user_id
+    const changes = req.body
+    try {
+        await Users.updateUser(user_id, changes)
+        res.status(201).json({message: "Update Successful"})
+    } catch(err) {
+      res.status(500).json({message: "Update Failed"})
+    }
+})
+
+router.put("/password/:user_id", async (req,res) => {
+  const user_id = req.params.user_id
+  const password = bcrypt.hashSync(req.body.password, 10)
+  try {
+    await Users.updateUser(user_id, {password})
+    res.status(201).json({message: "Password Update Successful"})
+  } catch(err) {
+    res.status(500).json({message: "Password Update Failed"})
+  }
+})
+
+router.get("/", async(req,res) => {
+  try {
+    const users = await Users.getUsers()
+    res.status(200).json({users: users})
+  } catch(err) {
+    res.status(500).json({message: "Get Failed"})
+  }
 })
 
 module.exports = router;
