@@ -25,7 +25,7 @@ router.post("/:org_id", async function (req, res) {
       to: req.body.email,
       from: 'ken@hypcycle.com',
       subject: "You've been invited to join Hypcycle",
-      html: `Login to your account at <a href="http://localhost:3000/reset-password/${req.body.email}/${newUser[0]}/${tempPassword}">https://app.hypcycle.com/reset-password</a>. Please reset your password when you first login.`
+      html: `Login to your account at <a href="https://app.hypcycle.com/reset-password/${req.body.email}/${newUser[0]}/${tempPassword}">https://app.hypcycle.com/reset-password</a>. Please reset your password when you first login.`
     }
     sgMail.send(msg)
       .then(() => console.log("email sent"))
