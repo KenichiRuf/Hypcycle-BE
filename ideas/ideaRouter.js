@@ -4,6 +4,7 @@ const Ideas = require("./ideaModel");
 const Tags = require("../tags/tagModel");
 
 router.post("/", async (req, res) => {
+    console.log("post")
     const idea = req.body;
     try {
         const newIdea = await Ideas.addIdea(idea);
@@ -63,6 +64,16 @@ router.get("/", async (req,res) => {
         })
     } catch(err) {
         res.status(500).json({message: "Get Failed", error: err})
+    }
+})
+
+router.get("/goal/:goalId", async (req,res) => {
+    const goalId = req.params.goalId
+    try {
+        const ideas = await Ideas.getIdeasByGoalId(goalId)
+        res.status(200).json({ideas: ideas})
+    } catch(err) {
+        res.status(500).json({message: "Could Not Get Ideas"})
     }
 })
 

@@ -6,7 +6,9 @@ const {verifyUniqueEmailOrgUser} = require("../middlewares");
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-router.post("/:org_id", verifyUniqueEmailOrgUser(req.params.org_id), async (req, res) => {
+router.post("/:org_id", async function (req, res) {
+  verifyUniqueEmailOrgUser(req.params.org_id, req, res)},
+  async function(req,res){ 
   const tempPassword = "hamburger"
   const user = {
     email: req.body.email,
@@ -57,21 +59,12 @@ router.get("/:userId", async (req, res) => {
 
 router.get("/orgUser/:userId", async (req,res) => {
     const userId = req.params.userId
-    console.log(userId)
     try {
-      const orgUsers = await Users.getOrgUser(userId);
+      const orgUsers = await Users.getOrgUsers(userId);
       res.status(200).json({orgUsers: orgUsers})
     } catch(err) {
+      console.log(err)
       res.status(500).json({message: "Get OrgUser Failed", error: err})
-    }
-})
-
-router.get("/orgUser", async (req,res) => {
-    try {
-      const orgUsers = await Users.getOrgUsers();
-      res.status(200).json({orgUsers: orgUsers})
-    } catch(err) {
-      res.status(500).json({message: "Get OrgUsers Failed", error: err})
     }
 })
 
