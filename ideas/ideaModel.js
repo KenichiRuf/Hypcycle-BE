@@ -2,6 +2,7 @@ const db = require("../data/dbConfig.js");
 
 const getIdeas = async org_id => {
     return db("ideas").where({org_id})
+    // return db("ideas")
 }
 
 const updateIdea = async (changes, id) => {
@@ -67,6 +68,10 @@ const getIdeaTagsByOrgId = async org_id => {
     })
 }
 
+const getIdeasByGoalId = async goal_id => {
+    return await db("ideas").where({goal_id})
+}
+
 module.exports = {
     addIdea,
     updateIdea,
@@ -74,5 +79,6 @@ module.exports = {
     removeNode,
     insertNode,
     getIdeas,
-    getIdeaTagsByOrgId
+    getIdeaTagsByOrgId,
+    getIdeasByGoalId
 };

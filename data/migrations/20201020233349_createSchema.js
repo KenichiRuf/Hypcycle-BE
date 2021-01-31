@@ -22,6 +22,7 @@ exports.up = function(knex) {
     .createTable("goals", tbl => {
       tbl.increments("id");
       tbl.string("name");
+      tbl.string("description");
       tbl.integer("org_id").unsigned().references("id").inTable("orgs");
       tbl.integer("owner_id").unsigned().references("id").inTable("org_users");
       tbl.string("metric");

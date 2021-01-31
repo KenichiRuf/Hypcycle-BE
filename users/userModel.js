@@ -16,12 +16,8 @@ const addOrgUser = async orgUser => {
   return await db("org_users").where({user_id}).join("users", "org_users.user_id", "users.id")
 }
 
-const getOrgUser = async user_id => {
+const getOrgUsers = async user_id => {
   return await db("org_users").join("orgs", "org_users.org_id", "=", "orgs.id").where({user_id})
-}
-
-const getOrgUsers = async () => {
-  return await db("org_users")
 }
 
 const getOrgUsersByOrgId = async org_id => {
@@ -40,7 +36,6 @@ module.exports = {
   addUser,
   findBy,
   addOrgUser,
-  getOrgUser,
   getOrgUsers,
   getOrgUsersByOrgId,
   updateUser,
