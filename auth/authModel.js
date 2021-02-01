@@ -13,26 +13,21 @@ const findBy = async filter => {
 const register = async (user,org) => {
   const newUser = await db("users").insert(user)
   const newOrg = await db("orgs").insert(org)
+  return {user: newUser, org: newOrg}
+}
 
-  var wait;
-
-  async function addNewOrgUser() {
-    console.log(newUser[0], newOrg[0])
-    wait = setTimeout(callback, 1000)
+const addOrgUser = async (userId, orgId) => {
+  console.log("addOrgUser", userId, orgId)
+  const orgUser = {
+    user_id: userId,
+    org_id: orgId
   }
-
-  async function callback() {
-    console.log(newUser[0], newOrg[0])
-    await db("org_users").insert({user_id: newUser[0], org_id: newOrg[0]})
-  }
-
-  addNewOrgUser()
-
-  return [newUser, newOrg]
+  return await db("org_users").insert(orgUser)
 }
 
 module.exports = {
   addUser,
   findBy,
-  register
+  register,
+  addOrgUser
 };
