@@ -119,4 +119,14 @@ router.delete("/:id", async (req,res) => {
   }
 })
 
+router.delete("/orgUsers/:id", async (req,res) => {
+  const id = req.params.id
+  try {
+    await Users.deleteOrgUser(id)
+    res.status(201).json({message: "OrgUser Deleted"})
+  } catch(err) {
+    res.status(500).json({message: "Delete Failed"})
+  }
+})
+
 module.exports = router;
