@@ -49,8 +49,20 @@ const deleteOrgUser = async id => {
 const register = async (user,org) => {
   let newUser = await addUser(user)
   let newOrg = await db("orgs").insert(org)
-  let orgUser = await addOrgUser({user_id: newUser[0], org_id: newOrg[0]})
-  return [newUser, newOrg, orgUser]
+  
+  var wait;
+
+  function addNewOrgUser() {
+    wait = setTimeout(callback, 500)
+  }
+
+  function callback() {
+    addOrgUser({user_id: newUser[0], org_id: newOrg[0]})
+  }
+
+  addNewOrgUser()
+
+  return [newUser, newOrg]
 }
 
 module.exports = {
