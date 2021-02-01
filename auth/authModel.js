@@ -13,7 +13,7 @@ const findBy = async filter => {
 const register = async (user,org) => {
   const newUser = await db("users").insert(user)
   const newOrg = await db("orgs").insert(org)
-  return {newUser, newOrg}
+  return [newUser, newOrg]
 }
 
 const addOrgUser = (userId, orgId) => {
