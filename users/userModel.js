@@ -13,15 +13,21 @@ const findBy = async filter => {
 const addOrgUser = async orgUser => {
   await db("org_users").insert(orgUser)
   const user_id = orgUser.user_id
-  return await db("org_users").where({user_id}).join("users", "org_users.user_id", "users.id")
+  return await db("org_users").join("users", function() {
+    this.on("org_users.user_id", "=", "users.id").onIn("org_users.user_id", user_id)
+  }
 }
 
 const getOrgUsers = async user_id => {
-  return await db("org_users").join("orgs", "org_users.org_id", "=", "orgs.id").where({user_id})
+  return await db("org_users").join("orgs", function() {
+    this.on("org_users.org_id", "=", "orgs.id").onIn("org_users.user_id", user_id)
+  })
 }
 
 const getOrgUsersByOrgId = async org_id => {
-  return await db("org_users").where({org_id}).join("users", "org_users.user_id", "users.id")
+  return await db("org_users").join("users", function() {
+    this.on("org_users.user_id", "users.id").onIn("org_users.org_id", org_id)
+  })
 }
 
 const updateUser = async (id, changes) => {
