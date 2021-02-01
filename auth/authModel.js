@@ -18,10 +18,11 @@ const register = async (user,org) => {
 
   async function addNewOrgUser() {
     console.log(newUser[0], newOrg[0])
-    wait = setTimeout(callback, 500)
+    wait = setTimeout(callback, 1000)
   }
 
   async function callback() {
+    console.log(newUser[0], newOrg[0])
     await db("org_users").insert({user_id: newUser[0], org_id: newOrg[0]})
   }
 
