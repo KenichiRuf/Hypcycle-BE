@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const Users = require("../users/userModel");
-const Orgs = require("../orgs/orgModel");
+const Auth = require("../auth/authModel");
 const {verifyUniqueEmail, verifyUniqueOrgName} = require("../middlewares");
 
 router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res) => {
@@ -20,7 +20,7 @@ router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res
   }
 
   try {
-    const newData = await Users.register(user,org)
+    const newData = await Auth.register(user,org)
     res.status(201).json({data: newData})
   } catch(err) {
     res.status(500).json({message: "Registration Failed", error: err})
