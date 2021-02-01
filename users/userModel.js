@@ -15,7 +15,7 @@ const addOrgUser = async orgUser => {
   const user_id = orgUser.user_id
   return await db("org_users").join("users", function() {
     this.on("org_users.user_id", "=", "users.id").onIn("org_users.user_id", user_id)
-  }
+  })
 }
 
 const getOrgUsers = async user_id => {
