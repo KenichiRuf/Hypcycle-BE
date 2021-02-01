@@ -20,27 +20,16 @@ router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res
   }
 
   Users.addUser(user)
-    .then(res1 => Orgs.addOrg(org)
-      .then(res2 => Users.addOrgUser({user_id: res1[0], org_id: res2[0]})
-        .then(res3 => res.status(201).json({ message: "Successful Registration", user: user }))
-        .catch(err3 => res.status(500).json({ message: "Registration Failed", error: error })))
-      .catch(err2 => res.status(500).json({ message: "Registration Failed", error: error })))
-    .catch(err1 => res.status(500).json({ message: "Registration Failed", error: error }))
+    .then(res1 => console.log(res1))
+    .catch(err1 => console.log(err1))
 
-  // try {
-  //   const newUser = await Users.addUser(user);
-  //   const newOrg = await Orgs.addOrg(org);
-  //   console.log(newUser)
-  //   console.log(newOrg)
-  //   await Users.addOrgUser({
-  //     user_id: newUser,
-  //     org_id: newOrg
-  //   });
-  //   res.status(201).json({ message: "Successful Registration", user: user });
-  // } catch (error) {
-  //   console.log(error)
-  //   res.status(500).json({ message: "Registration Failed", error: error });
-  // }
+  // Users.addUser(user)
+  //   .then(res1 => Orgs.addOrg(org)
+  //     .then(res2 => Users.addOrgUser({user_id: res1[0], org_id: res2[0]})
+  //       .then(res3 => res.status(201).json({ message: "Successful Registration", user: user, user_id: res1, org_id: res2, res3: res3 }))
+  //       .catch(err3 => res.status(500).json({ message: "Registration Failed", error: error })))
+  //     .catch(err2 => res.status(500).json({ message: "Registration Failed", error: error })))
+  //   .catch(err1 => res.status(500).json({ message: "Registration Failed", error: error }))
 });
 
 router.post("/login", async (req, res) => {
