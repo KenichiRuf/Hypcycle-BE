@@ -10,4 +10,12 @@ const findBy = async filter => {
     .first();
 };
 
-module.exports = { addOrg, findBy };
+const deleteOrg = async id => {
+  return await db("orgs").where({id}).del()
+}
+
+module.exports = {
+  addOrg,
+  findBy,
+  deleteOrg
+};

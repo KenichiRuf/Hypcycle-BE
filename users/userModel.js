@@ -32,6 +32,10 @@ const getUsers = async () => {
   return await db("users")
 }
 
+const deleteUser = async id => {
+  return await db("users").where({id}).del()
+}
+
 module.exports = {
   addUser,
   findBy,
@@ -39,5 +43,6 @@ module.exports = {
   getOrgUsers,
   getOrgUsersByOrgId,
   updateUser,
-  getUsers
+  getUsers,
+  deleteUser
 };

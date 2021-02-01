@@ -28,7 +28,6 @@ router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res
     });
     res.status(201).json({ message: "Successful Registration", user: user });
   } catch (error) {
-    console.log(error)
     res.status(500).json({ message: "Registration Failed", error: error });
   }
 });
