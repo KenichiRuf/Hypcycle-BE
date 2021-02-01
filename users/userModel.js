@@ -49,10 +49,11 @@ const deleteOrgUser = async id => {
 const register = async (user,org) => {
   let newUser = await addUser(user)
   let newOrg = await db("orgs").insert(org)
-  
+
   var wait;
 
   function addNewOrgUser() {
+    console.log(newUser[0], newOrg[0])
     wait = setTimeout(callback, 500)
   }
 
