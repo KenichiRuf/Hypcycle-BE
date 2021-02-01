@@ -20,8 +20,8 @@ router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res
   }
 
   try {
-    const [newUser] = await Users.addUser(user);
-    const [newOrg] = await Orgs.addOrg(org);
+    const newUser = await Users.addUser(user);
+    const newOrg = await Orgs.addOrg(org);
     console.log(newUser)
     console.log(newOrg)
     await Users.addOrgUser({
