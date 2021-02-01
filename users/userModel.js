@@ -46,6 +46,13 @@ const deleteOrgUser = async id => {
   return await db("org_users").where({id}).del()
 }
 
+const register = async (user,org) => {
+  let newUser = await addUser(user)
+  let newOrg = await db("orgs").insert(org)
+  let orgUser = await addOrgUser({user_id: newUser[0], org_id: newOrg[0]})
+  return [newUser, newOrg, orgUser]
+}
+
 module.exports = {
   addUser,
   findBy,
@@ -55,5 +62,6 @@ module.exports = {
   updateUser,
   getUsers,
   deleteUser,
-  deleteOrgUser
+  deleteOrgUser,
+  register
 };
