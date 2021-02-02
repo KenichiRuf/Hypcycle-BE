@@ -10,17 +10,10 @@ const findBy = async filter => {
     .first();
 };
 
-const register = async (user,org) => {
-  return db("users").insert(user)
-  // const newOrg = db("orgs").insert(org)
-  // return [newUser, newOrg]
-}
-
 const addOrgUser = async (userId, orgId) => {
-  console.log(userId, orgId)
   const orgUser = {
-    user_id: userId,
-    org_id: orgId
+    user_id: userId[0],
+    org_id: orgId[0]
   }
   return await db("org_users").insert(orgUser)
 }
@@ -28,6 +21,5 @@ const addOrgUser = async (userId, orgId) => {
 module.exports = {
   addUser,
   findBy,
-  register,
   addOrgUser
 };
