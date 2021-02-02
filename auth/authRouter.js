@@ -21,10 +21,10 @@ router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res
 
   try {
     const [newUser, newOrg] = await Auth.register(user,org)
-    console.log("register", newUser[0], newOrg[0])
+    console.log("register", newUser, newOrg)
     const orgUser = Auth.addOrgUser(newUser[0], newOrg[0])
-    console.log("addOrgUser", newUser[0], newOrg[0])
-    res.status(201).json({message: "Registration Successful"})
+    console.log("addOrgUser", newUser, newOrg)
+    res.status(201).json({message: "Registration Successful", user: newUser, org: newOrg, orgUser: orgUser})
   } catch(err) {
     res.status(500).json({message: "Registration Failed", error: err})
   }
