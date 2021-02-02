@@ -7,7 +7,7 @@ const Orgs = require("../orgs/orgModel");
 const Auth = require("../auth/authModel");
 const {verifyUniqueEmail, verifyUniqueOrgName} = require("../middlewares");
 
-router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, (req, res) => {
+router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res) => {
   const user = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
@@ -20,10 +20,18 @@ router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, (req, res) => {
     users: 1
   }
 
-  Auth.register(user,org)
-    .then(response => Auth.addOrgUser(response[0], response[1]))
-    .then(response => res.status(201).json({message: "Registration Successful"}))
-    .catch(error => res.status(500).json({message: "Registration Failed", error: error}))
+  let userId
+  let orgId
+
+  await Users.addUser(user)
+    .then(response => userId = response[0])
+    .catch(error => res.status(500).json({message: "Add User Failed", error: error}))
+  await Orgs.addOrg(org)
+    .then(response => orgId = response[0])
+    .catch(error => res.status(500).json({message: "Add Org Failed", error: error}))
+  await Auth.addOrgUser(userId, orgId)
+    .then(response => res.status(201).json({message: "Registration Successful", orgUser: response}))
+    .catch(error => res.status(500).json({message: "Add OrgUser Failed", error: error}))
 });
 
 router.post("/login", async (req, res) => {
