@@ -23,7 +23,7 @@ const addOrgUser = async (userId, orgId) => {
     user_id: user_id,
     org_id: org_id
   }
-  return db("org_users").insert(orgUser)
+  return await db("org_users").insert(orgUser)
 }
 
 module.exports = {
