@@ -17,12 +17,10 @@ const register = async (user,org) => {
 }
 
 const addOrgUser = async (userId, orgId) => {
-  const user_id = userId
-  const org_id = orgId
-  console.log(user_id, org_id)
+  console.log(userId, orgId)
   const orgUser = {
-    user_id: user_id[0],
-    org_id: org_id[0]
+    user_id: userId,
+    org_id: orgId
   }
   return await db("org_users").insert(orgUser)
 }
