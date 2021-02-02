@@ -1,7 +1,7 @@
 const db = require("../data/dbConfig.js");
 
 const addUser = async user => {
-  return await db("users").insert(user);
+  return await db("users").insert(user)[0];
 };
 
 const findBy = async filter => {
@@ -19,9 +19,10 @@ const register = async (user,org) => {
 const addOrgUser = async (userId, orgId) => {
   const user_id = await userId
   const org_id = await orgId
+  console.log(user_id, org_id)
   const orgUser = {
-    user_id: user_id,
-    org_id: org_id
+    user_id: user_id[0],
+    org_id: org_id[0]
   }
   return await db("org_users").insert(orgUser)
 }
