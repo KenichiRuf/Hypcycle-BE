@@ -1,7 +1,8 @@
 {
   "scripts": {
     "server": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "webpack"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.4.2",
