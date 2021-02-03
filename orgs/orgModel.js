@@ -1,7 +1,7 @@
 const db = require("../data/dbConfig.js");
 
 const addOrg = async org => {
-  return await db("orgs").insert(org);
+  return await db("orgs").insert(org).returning("id");
 };
 
 const findBy = async filter => {
