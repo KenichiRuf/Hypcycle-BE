@@ -51,7 +51,7 @@ const insertNode = async (idea, reference, head) => {
 
 const addIdea = async idea => {
     const tail = await db("ideas").where({next: null, org_id: idea.org_id}).first()
-    const [newIdea] = await db("ideas").insert(idea);
+    const [newIdea] = await db("ideas").insert(idea).returning("id");
     if(tail) {
         await updateIdea({next: newIdea}, tail.id)
         await updateIdea({previous: tail.id}, newIdea)

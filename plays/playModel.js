@@ -1,7 +1,7 @@
 const db = require("../data/dbConfig.js");
 
 const addPlay = async play => {
-  return await db("plays").insert(play);
+  return await db("plays").insert(play).returning("id");
 };
 
 const getByPlaybookId = async playbook_id => {

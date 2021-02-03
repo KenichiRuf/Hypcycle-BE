@@ -1,7 +1,7 @@
 const db = require("../data/dbConfig.js");
 
 const addTag = async tag => {
-  return await db("tags").insert(tag);
+  return await db("tags").insert(tag).returning("id");
 };
 
 const getTags = async () => {
@@ -9,11 +9,11 @@ const getTags = async () => {
 }
 
 const addGoalTag = async (goal_id, tag_id) => {
-    return await db("goal_tags").insert({goal_id, tag_id})
+    return await db("goal_tags").insert({goal_id, tag_id}).returning("id")
 }
 
 const addIdeaTag = async (idea_id, tag_id) => {
-    return await db("idea_tags").insert({idea_id, tag_id})
+    return await db("idea_tags").insert({idea_id, tag_id}).returning("id")
 }
 
 const getGoalTags = async goal_id => {

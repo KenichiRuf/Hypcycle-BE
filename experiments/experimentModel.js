@@ -1,7 +1,7 @@
 const db = require("../data/dbConfig.js");
 
 const addExperiment = async experiment => {
-    const newExperiment = await db("experiments").insert(experiment)
+    const newExperiment = await db("experiments").insert(experiment).returning("id")
     await db("ideas").where({id: experiment.idea_id}).update({converted: true})
     return newExperiment
 }

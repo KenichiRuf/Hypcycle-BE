@@ -1,7 +1,7 @@
 const db = require("../data/dbConfig.js");
 
 const addGoal = async goal => {
-  return await db("goals").insert(goal);
+  return await db("goals").insert(goal).returning("id");
 };
 
 const updateGoal = async (changes, id) => {
