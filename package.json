@@ -1,8 +1,7 @@
 {
   "scripts": {
     "server": "nodemon index.js",
-    "start": "node index.js",
-    "build": "webpack"
+    "start": "node index.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^7.4.2",
@@ -21,7 +20,7 @@
     "sqlite3": "^5.0.0"
   },
   "engines": {
-    "node": "14.15.4",
+    "node": "14.x",
     "yarn": "1.16.0"
   }
 }
