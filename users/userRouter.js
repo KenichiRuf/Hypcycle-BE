@@ -6,35 +6,45 @@ const {verifyUniqueEmailOrgUser} = require("../middlewares");
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
-router.post("/:org_id", async function (req, res) {
-  verifyUniqueEmailOrgUser(req.params.org_id, req, res)},
-  async function(req,res){ 
-  const tempPassword = "hamburger"
-  const user = {
-    email: req.body.email,
-    password: bcrypt.hashSync(tempPassword, 10)
-  };
+router.post("/:org_id", verifyUniqueEmailOrgUser, async (req, res) => {
+    const tempPassword = "ChangeMe"
+    const email = req.body.email
+    const password = bcrypt.hashSync(tempPassword, 10)
 
-  try {
-    const newUser = await Users.addUser(user);
-    const newOrgUser = await Users.addOrgUser({
-      user_id: newUser[0],
-      org_id: req.params.org_id
-    });
-    const msg = {
-      to: req.body.email,
-      from: 'ken@hypcycle.com',
-      subject: "You've been invited to join Hypcycle",
-      html: `Login to your account at <a href="https://app.hypcycle.com/reset-password/${req.body.email}/${newUser[0]}/${tempPassword}">https://app.hypcycle.com/reset-password</a>. Please reset your password when you first login.`
+    try {
+      const user = await Users.findBy({email})
+      let newOrgUser
+      let newUser
+      let msg
+      if(user) {
+        newOrgUser = await Users.addOrgUser({
+          user_id: user.id,
+          org_id: req.params.org_id
+        });
+        msg = {
+          to: req.body.email,
+          from: 'ken@hypcycle.com',
+          subject: "You've been invited to join Hypcycle",
+          html: `Login to your account <a href="https://app.hypcycle.com/#/login>here</a>.`
+        }
+      } else {
+        newUser = await Users.addUser({email: email, password: password});
+        newOrgUser = await Users.addOrgUser({
+          user_id: newUser[0],
+          org_id: req.params.org_id
+        });
+        msg = {
+          to: req.body.email,
+          from: 'ken@hypcycle.com',
+          subject: "You've been invited to join Hypcycle",
+          html: `Login to your account at <a href="https://app.hypcycle.com/#/invite/${req.body.email}/${user ? user.id : newUser[0]}/${req.params.org_id}/${tempPassword}">https://app.hypcycle.com/</a>. Please reset your password when you first login.`
+        }
+      }
+      sgMail.send(msg)
+      res.status(201).json({ message: "Added New User", orgUser: newOrgUser});
+    } catch (error) {
+      res.status(500).json({ message: "Could Not Add New User", error: error });
     }
-    sgMail.send(msg)
-      .then(() => console.log("email sent"))
-      .catch((error) => console.error(error))
-    res.status(201).json({ message: "Added New User", orgUser: newOrgUser});
-  } catch (error) {
-    console.log(error)
-    res.status(500).json({ message: "Could Not Add New User", error: error });
-  }
 });
 
 router.post("/orgUser", async (req, res) => {
@@ -61,17 +71,17 @@ router.get("/orgUser/:userId", async (req,res) => {
     const userId = req.params.userId
     try {
       const orgUsers = await Users.getOrgUsers(userId);
+      console.log(orgUsers)
       res.status(200).json({orgUsers: orgUsers})
     } catch(err) {
-      console.log(err)
       res.status(500).json({message: "Get OrgUser Failed", error: err})
     }
 })
 
-router.get("/orgUsers/:id", async(req,res) => {
-    const id = req.params.id
+router.get("/orgUsers/:orgId", async(req,res) => {
+    const orgId = req.params.orgId
     try {
-        const orgUsers = await Users.getOrgUsersByOrgId(id)
+        const orgUsers = await Users.getOrgUsersByOrgId(orgId)
         res.status(200).json({orgUsers: orgUsers})
     } catch(err) {
         res.status(500).json({message: "Get Failed", error: err})

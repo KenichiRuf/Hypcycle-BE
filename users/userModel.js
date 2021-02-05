@@ -25,9 +25,9 @@ const getOrgUsers = async user_id => {
 }
 
 const getOrgUsersByOrgId = async org_id => {
-  return await db("org_users").join("users", function() {
+  return await db("org_users").innerJoin("users", function() {
     this.on("org_users.user_id", "users.id").onIn("org_users.org_id", org_id)
-  })
+  }).select("org_users.id", "org_users.user_id", "org_users.org_id", "users.first_name", "users.last_name", "users.email", "users.password")
 }
 
 const updateUser = async (id, changes) => {

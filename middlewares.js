@@ -24,10 +24,11 @@ async function verifyUniqueEmail(req, res, next) {
     }
 }
 
-async function verifyUniqueEmailOrgUser(org_id, req, res, next) {
+async function verifyUniqueEmailOrgUser(req, res, next) {
     const email = req.body.email
+    const org_id = req.body.orgId
     try {
-        const orgUsers = await Users.getOrgUsersByOrgId({org_id})
+        const orgUsers = await Users.getOrgUsersByOrgId(org_id)
         const [user] = orgUsers.filter(orgUser => orgUser.email === email)
         if(user) {
             res.status(400).json({message: "Email Already In Use"})
