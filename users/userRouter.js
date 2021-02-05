@@ -71,7 +71,6 @@ router.get("/orgUser/:userId", async (req,res) => {
     const userId = req.params.userId
     try {
       const orgUsers = await Users.getOrgUsers(userId);
-      console.log(orgUsers)
       res.status(200).json({orgUsers: orgUsers})
     } catch(err) {
       res.status(500).json({message: "Get OrgUser Failed", error: err})

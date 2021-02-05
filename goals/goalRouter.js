@@ -6,8 +6,8 @@ const Tags = require("../tags/tagModel");
 router.post("/", async (req, res) => {
     const goal = req.body;
     try {
-      const [newGoal] = await Goals.addGoal(goal);
-      res.status(201).json({message: "New Goal Created", goal: {...goal, id: newGoal}})
+      const newGoal = await Goals.addGoal(goal);
+      res.status(201).json({message: "New Goal Created", goal: {...goal, id: newGoal[0]}})
     } catch(err) {
       res.status(500).json({message: "Could Not Create New Goal", error: err})
     }
