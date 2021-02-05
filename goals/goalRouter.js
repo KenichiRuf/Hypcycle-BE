@@ -9,6 +9,7 @@ router.post("/", async (req, res) => {
       const newGoal = await Goals.addGoal(goal);
       res.status(201).json({message: "New Goal Created", goal: {...goal, id: newGoal[0]}})
     } catch(err) {
+        console.log(err)
       res.status(500).json({message: "Could Not Create New Goal", error: err})
     }
 })
