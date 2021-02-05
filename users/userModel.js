@@ -1,3 +1,4 @@
+const { returning } = require("../data/dbConfig.js");
 const db = require("../data/dbConfig.js");
 
 const addUser = async user => {
@@ -20,8 +21,9 @@ const addOrgUser = async orgUser => {
 
 const getOrgUsers = async user_id => {
   return await db("org_users").join("orgs", function() {
-    this.on("org_users.org_id", "=", "orgs.id").onIn("org_users.user_id", user_id)
-  })
+    this.on("org_users.org_id", "=", "orgs.id")
+    .onIn("org_users.user_id", user_id)
+  }).select("org_users.id", "org_users.user_id", "org_users.org_id", "orgs.name", "orgs.plan")
 }
 
 const getOrgUsersByOrgId = async org_id => {
