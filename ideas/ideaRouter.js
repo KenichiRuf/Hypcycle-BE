@@ -4,7 +4,6 @@ const Ideas = require("./ideaModel");
 const Tags = require("../tags/tagModel");
 
 router.post("/", async (req, res) => {
-    console.log("post")
     const idea = req.body;
     try {
         const newIdea = await Ideas.addIdea(idea);
@@ -14,15 +13,13 @@ router.post("/", async (req, res) => {
     }
 })
 
-router.put("/edit/:ideaId", async (req,res) => {
+router.put("/:ideaId", async (req,res) => {
     const ideaId = req.params.ideaId
     const changes = req.body
-    console.log(changes)
     try {
         await Ideas.updateIdea(changes, ideaId);
         res.status(200).json({message: "Update Successful"})
     } catch(err) {
-        console.log(err)
         res.status(500).json({message: "Update Failed", error: err})
     }
 })
@@ -56,7 +53,6 @@ router.get("/", async (req,res) => {
         const ideas = await Ideas.getIdeas(1)
         const ideaTags = await Ideas.getIdeaTagsByOrgId(1)
         const tags = await Tags.getTags()
-        console.log(ideas, ideaTags, tags)
         res.status(200).json({
             ideas: [...ideas],
             ideaTags: [...ideaTags],
