@@ -1,4 +1,3 @@
-const { returning } = require("../data/dbConfig.js");
 const db = require("../data/dbConfig.js");
 
 const addUser = async user => {
