@@ -25,10 +25,15 @@ const getGoalTags = async () => {
     return await db("goal_tags")
 }
 
+const deleteGoal = async id => {
+    return await db("goals").where({id}).del()
+}
+
 module.exports = {
     addGoal,
     updateGoal,
     getGoalsByOrgId,
     getGoalTagsByOrgId,
-    getGoalTags
+    getGoalTags,
+    deleteGoal
 };
