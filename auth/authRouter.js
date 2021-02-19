@@ -6,6 +6,8 @@ const Users = require("../users/userModel");
 const Orgs = require("../orgs/orgModel");
 const Auth = require("../auth/authModel");
 const {verifyUniqueEmail, verifyUniqueOrgName} = require("../middlewares");
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res) => {
   const user = {
@@ -23,6 +25,16 @@ router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res
     const newUser = await Users.addUser(user)
     const newOrg = await Orgs.addOrg(org)
     const newOrgUser = await Auth.addOrgUser(newUser, newOrg)
+    msg = {
+      to: req.body.email,
+      from: 'ken@hypcycle.com',
+      templateId: 'd-e9df907c00504c1988990132db36d5f7',
+      dynamicTemplateData: {
+        first_name: req.body.first_name,
+        sender_name: "Ken Ruf"
+      }
+    }
+    sgMail.send(msg)
     res.status(201).json({message: "Registration Successful", userId: newUser[0], orgId: newOrg[0], orgUserId: newOrgUser[0]})
   } catch(err) {
     res.status(500).json({message: "Registration Failed", error: err})
