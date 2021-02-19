@@ -28,8 +28,11 @@ router.post("/register", verifyUniqueEmail, verifyUniqueOrgName, async (req, res
     msg = {
       to: req.body.email,
       from: 'ken@hypcycle.com',
-      subject: "Welcome to Hypcycle",
-      html: `Hi ${req.body.first_name},<br>Thanks for joining Hypcycle. `
+      templateId: 'd-e9df907c00504c1988990132db36d5f7',
+      dynamicTemplateData: {
+        first_name: req.body.first_name,
+        sender_name: "Ken Ruf"
+      }
     }
     sgMail.send(msg)
     res.status(201).json({message: "Registration Successful", userId: newUser[0], orgId: newOrg[0], orgUserId: newOrgUser[0]})
