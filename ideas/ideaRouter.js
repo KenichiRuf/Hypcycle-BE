@@ -22,10 +22,8 @@ router.put("/move", async (req,res) => {
     try {
         await Ideas.removeNode(idea)
         const ideas = await Ideas.insertNode(idea, reference, head)
-        console.log(ideas)
         res.status(201).json({message: "Successfully Moved Node", ideas: ideas})
     } catch(err) {
-        console.log(err)
         res.status(500).json({message: "Could Not Move Node", error: err})
     }
 })
@@ -45,7 +43,6 @@ router.get("/:orgId", async (req,res) => {
     const orgId = req.params.orgId
     try {
         const ideas = await Ideas.getIdeasByOrgId(orgId);
-        // const ideas = await Ideas.getIdeas(orgId)
         res.status(200).json({ideas: [...ideas]})
     } catch(err) {
         res.status(500).json({message: "Get Failed", error: err})
