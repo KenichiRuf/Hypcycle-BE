@@ -2,7 +2,6 @@ const db = require("../data/dbConfig.js");
 
 const getIdeas = async org_id => {
     return db("ideas").where({org_id})
-    // return db("ideas")
 }
 
 const updateIdea = async (changes, id) => {
