@@ -8,7 +8,12 @@ const getByOrgId = async org_id => {
     return await db("playbooks").where({org_id})
 }
 
+const getById = async id => {
+  return await db("playbooks").where({id}).first()
+}
+
 module.exports = {
     addPlaybook,
-    getByOrgId
+    getByOrgId,
+    getById
 };

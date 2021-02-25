@@ -22,4 +22,14 @@ router.get("/:orgId", async (req,res) => {
     }
 })
 
+router.get("/playbook/:id", async (req,res) => {
+  const id = req.params.id
+  try {
+      const playbook = await Playbooks.getById(id);
+      res.status(200).json({playbook: playbook})
+  } catch(err) {
+      res.status(500).json({message: "Get Failed", error: err})
+  }
+})
+
 module.exports = router;
