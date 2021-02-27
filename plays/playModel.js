@@ -8,7 +8,14 @@ const getByPlaybookId = async playbook_id => {
     return await db("plays").where({playbook_id})
 }
 
+const getById = async id => {
+  const play = await db("plays").where({id}).first()
+  const steps = await db("steps").where({play_id: id})
+  return {play: play, steps: steps}
+}
+
 module.exports = {
     addPlay,
-    getByPlaybookId
+    getByPlaybookId,
+    getById
 };
