@@ -24,10 +24,8 @@ router.get("/:playbookId", async (req,res) => {
 
 router.get("/play/:id", async (req,res) => {
   const id = req.params.id
-  console.log(id)
   try {
       const data = await Plays.getById(id);
-      console.log(data)
       res.status(200).json({play: data.play, steps: data.steps})
   } catch(err) {
       res.status(500).json({message: "Get Failed", error: err})

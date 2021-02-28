@@ -1,16 +1,19 @@
 const db = require("../data/dbConfig.js");
 
-const insertStep = async (step, location) => {
-    const tail = await db("steps").where({play_id: step.play_id, next: null}).returning("id")
-    const newStep = await db("steps").insert(step).returning("id").first()
-    if(tail) {
-        await db("steps").update({next: newStep}, tail)
+const addStep = async (step) => {
+    const tail = await db("steps").where({play_id: step.play_id, next: null}).first()
+    const [newStep] = await db("steps").insert(step).returning("id")
+    console.log(tail)
+    if(tail.id) {
+        await db("steps").where({id: tail.id}).update({next: newStep})
+    } else {
+        await db("plays").where({id: step.play_id}).update({head_step: newStep})
     }
     return db("steps").where({id: newStep}).first()
 };
 
-const getByPlayId = async play_id => {
-    let node = await db("steps").where({play_id: play_id, previous: null}).first()
+const getSteps = async id => {
+    let node = await db("steps").where({id}).first()
     let steps = [node]
     if(node) {
         while (node.next) {
@@ -23,7 +26,15 @@ const getByPlayId = async play_id => {
     }
 }
 
+const removeStep = async id => {
+    // let step = await db("steps").where({id}).first()
+    // const next = step.next
+    // let prev = await 
+    await db("steps").where({id}).del()
+}
+
 module.exports = {
-    insertStep,
-    getByPlayId
+    addStep,
+    getSteps,
+    removeStep
 };

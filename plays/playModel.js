@@ -10,7 +10,12 @@ const getByPlaybookId = async playbook_id => {
 
 const getById = async id => {
   const play = await db("plays").where({id}).first()
-  const steps = await db("steps").where({play_id: id})
+  let steps = []
+  let node = await db("steps").where({id: play.head_step}).first()
+  while(node) {
+    steps = [...steps, node]
+    node = await db("steps").where({id: node.next}).first()
+  }
   return {play: play, steps: steps}
 }
 

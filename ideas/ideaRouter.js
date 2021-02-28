@@ -14,7 +14,6 @@ router.post("/", async (req, res) => {
 })
 
 router.put("/move", async (req,res) => {
-    console.log("move")
     const idea = req.body.idea
     const reference = req.body.reference
     const head = req.body.head
