@@ -19,8 +19,13 @@ const getById = async id => {
   return {play: play, steps: steps}
 }
 
+const updatePlay = async (changes, id) => {
+  return await db("plays").where({id}).update(changes)
+}
+
 module.exports = {
     addPlay,
     getByPlaybookId,
-    getById
+    getById,
+    updatePlay
 };

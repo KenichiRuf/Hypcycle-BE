@@ -9,7 +9,10 @@ const getByOrgId = async org_id => {
 }
 
 const getById = async id => {
-  return await db("playbooks").where({id}).first()
+  const playbook = await db("playbooks").where({id}).first()
+  const objectives = await db("objectives").where({playbook_id: id})
+  const plays = await db("plays").where({playbook_id: id})
+  return {playbook, objectives, plays}
 }
 
 module.exports = {

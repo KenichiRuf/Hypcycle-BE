@@ -32,4 +32,15 @@ router.get("/play/:id", async (req,res) => {
   }
 })
 
+router.put("/:id", async (req,res) => {
+  const id = req.params.id
+  const changes = req.body
+  try {
+    await Plays.updatePlay(changes, id)
+    res.status(201).json({message: "Play Updated"})
+  } catch(err) {
+    res.status(500).json({message: "Update Failed"})
+  }
+})
+
 module.exports = router;

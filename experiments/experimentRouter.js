@@ -27,7 +27,6 @@ router.get("/:orgId", async (req, res) => {
     const orgId = req.params.orgId
     try {
         const experiments = await Experiments.getByOrgId(orgId)
-        console.log(experiments)
         res.status(200).json({experiments: experiments})
     } catch(err) {
         res.status(500).json({message: "Get Failed"})
